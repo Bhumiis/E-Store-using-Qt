@@ -94,7 +94,7 @@ void MainWindow::on_pushButton_Confirm_clicked()
             outputFile <<v[i].itemName <<"\t\t"<<v[i].itemPrice << "\n ";
         }
 
-        outputFile <<"Total: \t\t"<< total << "\n";
+        outputFile <<"Total: \t\t"<< total << "\n\n\n\n\n    End of this receipt     \n\n\n\n\\n";
 
     }
 
@@ -117,6 +117,8 @@ void MainWindow::on_pushButton_Back_2_clicked()
 
 void MainWindow::on_pushButtonExit_clicked()
 {
+    v.clear();
+    total = 0;
     this->close();
 }
 
