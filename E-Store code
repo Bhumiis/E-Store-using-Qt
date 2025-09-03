@@ -1,0 +1,174 @@
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include<vector>
+#include<string.h>
+#include<QString>
+#include<fstream>
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+}
+
+struct itemPrice
+{
+    std::string itemName;
+    int itemPrice;             // QString itemPrice;
+};
+
+ //global variable
+std::vector<itemPrice>  v;
+int total = 0;
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+       //Navigation Buttons
+
+void MainWindow::on_pushButtonViewcart_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+
+    std::string str;
+
+    for(int i= 0;i <static_cast<int>(v.size());i++)
+    {
+        str = v[i].itemName+"\t\t" + std::to_string(v[i].itemPrice);
+        ui->Itemlist->addItem(str.c_str());
+       total += v[i].itemPrice;
+    }
+    str = std::to_string(total);
+    ui->Totalprice->setText(str.c_str());
+}
+
+
+void MainWindow::on_pushButton_Back_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+
+void MainWindow::on_pushButton_Pay_clicked()
+{
+    std::string str =  std::to_string(total);;
+    ui->Totalamount->setText(str.c_str());
+    ui->stackedWidget->setCurrentIndex(2);
+
+}
+
+struct receiptInfo
+{
+    int receiptNum;
+    QString customerName , cardNum;
+};
+
+void MainWindow::on_pushButton_Confirm_clicked()
+{
+   std::ofstream outputFile;
+    receiptInfo ri;
+    ri.receiptNum = rand () % (1000000000-1000000 + 1) + 1000000;
+    ri.customerName = ui->textEditName->toPlainText();
+    ri.cardNum = ui->textEditCard->toPlainText();
+
+
+    outputFile.open("Salesdata.txt",std::ios::app);
+
+    if(outputFile)
+    {
+        outputFile <<"Receipt Number: "<<ri.receiptNum << "\n";
+
+        outputFile <<"Customer Name: "<<ri.customerName.toStdString() << "\n";
+
+        outputFile <<"Card Information: "<<ri.cardNum.toStdString() << "\n";
+
+        outputFile << "______________________________________________\n";
+
+        outputFile <<"Items \t\t Price\n";
+
+        for(int i = 0;i<static_cast<int>(v.size());i++)
+        {
+            outputFile <<v[i].itemName <<"\t\t"<<v[i].itemPrice << "\n ";
+        }
+
+        outputFile <<"Total: \t\t"<< total << "\n";
+
+    }
+
+    ui->stackedWidget->setCurrentIndex(3);
+
+
+}
+
+
+void MainWindow::on_pushButton_Backtopay_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+void MainWindow::on_pushButton_Back_2_clicked()
+{
+     ui->stackedWidget->setCurrentIndex(1);
+}
+
+
+void MainWindow::on_pushButtonExit_clicked()
+{
+    this->close();
+}
+
+      // ADD Buttons
+
+void MainWindow::on_pushButtoncoke_clicked()
+{
+    itemPrice ip;
+    ip.itemName = "Coke";
+    ip.itemPrice = 45;
+
+    v.push_back(ip);
+
+}
+
+
+void MainWindow::on_pushButton_pepsi_clicked()
+{
+    itemPrice ip;
+    ip.itemName = "Pepsi";
+    ip.itemPrice = 65;
+
+    v.push_back(ip);
+
+}
+
+
+void MainWindow::on_pushButton_sprite_clicked()
+{
+    itemPrice ip;
+    ip.itemName = "Sprite";
+    ip.itemPrice = 54;
+
+    v.push_back(ip);
+
+}
+
+
+void MainWindow::on_pushButton_fanta_clicked()
+{
+    itemPrice ip;
+    ip.itemName = "Fanta";
+    ip.itemPrice = 48;
+
+    v.push_back(ip);
+
+}
+
+
+
+
+
+
+
+
